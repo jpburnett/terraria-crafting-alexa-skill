@@ -1,27 +1,8 @@
 {
-  "name": "terraria crafting tool",
+  "name": "terraria-tool",
   "version": "1.0.0",
-  "description": "How-to skill version 1",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jpburnett/terraria-crafting-alexa-skilll"
-  },
-  "keywords": [
-    "Alexa",
-    "crafting",
-    "terraria"
-  ],
-  "author": "Parker Burnett",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/jpburnett/terraria-crafting-alexa-skilll"
-  },
-  "homepage": "https://github.com/jpburnett/terraria-crafting-alexa-skilll#readme",
+  "private": true,
   "dependencies": {
-    "alexa-sdk": "^1.0.6"
+    "alexa-sdk": "^1.0.10"
   }
 }
