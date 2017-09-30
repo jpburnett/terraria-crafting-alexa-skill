@@ -36,12 +36,6 @@ const languageStrings = {
             SKILL_NAME: 'Terraria Tool',
         },
     },
-    'en-GB': {
-        translation: {
-            RECIPES: recipes.RECIPE_EN_GB,
-            SKILL_NAME: 'Terraria Tool',
-        },
-    },
 };
 
 var handlers = {
