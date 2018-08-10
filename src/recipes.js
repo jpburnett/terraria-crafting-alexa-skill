@@ -26,6 +26,6 @@ module.exports = {
         "grey brick": "grey brick can be made by using 2 stone at a furnace.",
         "red brick": "red brick can be made by using 2 clay at a furnace.",
         "bottle": "A bottle can be made by using 1 glass block at a furnace",
-        "Shadow Orb": "A Shadow Orb is a floating purple sphere, found deep in the Chasms of The Corruption. They can be destoryed with a hammer or bomb.",
+        "shadow orb": "A Shadow Orb is a floating purple sphere, found deep in the Chasms of The Corruption. They can be destoryed with a hammer or bomb.",
     },
 };
