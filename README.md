@@ -1,4 +1,4 @@
-# terraria-crafting-alexa-skill
+# terraria-tool-alexa-skill
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/jpburnett/terraria-tool-alexa-skill/master/LICENSE)
 
 ## What does it do?
