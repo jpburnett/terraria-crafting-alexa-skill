@@ -41,6 +41,7 @@ const RecipeHandler = {
             && handlerInput.requestEnvelope.request.intent.name === 'RecipeIntent';
     },
     handle(handlerInput) {
+        console.log("In RecipeHandler");
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
@@ -94,6 +95,7 @@ const HelpHandler = {
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
+        console.log("In HelpHandler");
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
@@ -115,6 +117,7 @@ const RepeatHandler = {
             && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.RepeatIntent';
     },
     handle(handlerInput) {
+        console.log("In RepeatHandler");
         const sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
         return handlerInput.responseBuilder
@@ -131,6 +134,7 @@ const ExitHandler = {
                 || handlerInput.requestEnvelope.request.intent.name === 'AMAZON.CancelIntent');
     },
     handle(handlerInput) {
+        console.log("In ExitHandler");
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const speakOutput = requestAttributes.t('STOP_MESSAGE', requestAttributes.t('SKILL_NAME'));
 
@@ -157,6 +161,7 @@ const ErrorHandler = {
         return true;
     },
     handle(handlerInput, error) {
+        console.log("In ErrorHandler");
         console.log(`Error handled: ${error.message}`);
         
         return handlerInput.responseBuilder
