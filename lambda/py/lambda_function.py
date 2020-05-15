@@ -1,10 +1,15 @@
 """
 Skill to help with crafting options in Terraria
 """
-
+#--------------------------------------------------------------------------
+# Python Libraries
+#--------------------------------------------------------------------------
 import logging
 import gettext
 
+#--------------------------------------------------------------------------
+# AwS Libraries
+#--------------------------------------------------------------------------
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.dispatch_components import (
@@ -14,6 +19,9 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model import Response
 
+#--------------------------------------------------------------------------
+# Resource Libraries
+#--------------------------------------------------------------------------
 from resources import data, util
 
 
@@ -23,11 +31,18 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-# //////////////////////////////////////////////////////////////////////////////
-# // Handlers
-# //////////////////////////////////////////////////////////////////////////////
+#--------------------------------------------------------------------------
+# Handlers
+#--------------------------------------------------------------------------
 class LaunchRequestHandler(AbstractRequestHandler):
-    """Handler for skill launch."""
+    """
+    Handler for skill launch.
+
+    Parameters:
+    AbstractRequestHandler (obj): Amazon Request Handler object
+
+    Returns: amazon 
+    """
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_request_type("LaunchRequest")(handler_input)
@@ -90,6 +105,20 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
         return handler_input.response_builder.response
 
+class RandomItemIntentHandler():
+    """
+    RandomItemIntentHandler is for when the user asks to get a random item from the list/dictionary
+    """
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("RecipeIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In RandomItemHandler")
+        _ = handler_input.attributes_manager.request_attributes["_"]
+
+    return handler_input.response_builder.response_builder
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
