@@ -48,5 +48,12 @@ RECIPE_EN_US = {
     "shadow orb": "A Shadow Orb is a floating purple sphere, and can be found deep in The Corruption areas.",
     "bottle": "A bottle can be made by using 1 glass block at a furnace",
     "mana crystal": "a mana crystal is made using three fallen stars.",
-    "fallen star": "fallen stars randomly fall from the sky at night."
+    "fallen star": "fallen stars randomly fall from the sky at night.",
+    "sticky glowstick": "sticky glowsticks are made with gel and a glowstick",
+    "sticky bomb": "sticky bomb is made with a bomb and gel",
+    "sticky grenade": "sticky grenade is made with a grenade and gel",
+    "heart lantern": "a heart lantern is made with a life crystal and 4 chain",
+    "life crystal": "a life crystal can be found in underground caverns",
+    "rope coil": "rope coil is made with 10 rope",
+    "soul of fright": "soul of fright is dropped by defeating skeletron prime"
 }
