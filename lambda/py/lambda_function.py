@@ -41,7 +41,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
     Parameters:
     AbstractRequestHandler (obj): Amazon Request Handler object
 
-    Returns: amazon 
+    Returns: amazon response object
     """
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
@@ -64,7 +64,14 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
 
 class RecipeIntentHandler(AbstractRequestHandler):
-    """Handler for Recipe Intent."""
+    """
+    Handler for getting the recipe for an item
+
+    Parameters:
+    AbstractRequestHandler (obj): Amazon Request Handler object
+
+    Returns: Amazon request with the item the user requested
+    """
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_intent_name("RecipeIntent")(handler_input)
@@ -107,18 +114,23 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
 class RandomItemIntentHandler():
     """
-    RandomItemIntentHandler is for when the user asks to get a random item from the list/dictionary
+    Handler for getting the recipe for a random item.
+
+    Parameters:
+    AbstractRequestHandler (obj): Amazon Request Handler object
+
+    Returns: amazon response object
     """
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
-        return is_intent_name("RecipeIntent")(handler_input)
+        return is_intent_name("RandomItemIntent")(handler_input)
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        logger.info("In RandomItemHandler")
+        logger.info("In RandomItemIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-    return handler_input.response_builder.response_builder
+        return handler_input.response_builder.response_builder
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
