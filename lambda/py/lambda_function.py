@@ -50,18 +50,20 @@ class LaunchRequestHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         logger.info("In LaunchRequestHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
+        # _ = handler_input.attributes_manager.request_attributes["_"]
 
-        locale = handler_input.request_envelope.request.locale
-        item = util.get_random_item(locale)
+        # locale = handler_input.request_envelope.request.locale
+        # item = util.get_random_item(locale)
 
-        speech = _(data.WELCOME_MESSAGE).format(
-            _(data.SKILL_NAME), item)
-        reprompt = _(data.WELCOME_REPROMPT)
+        # speech = _(data.WELCOME_MESSAGE).format(
+        #     _(data.SKILL_NAME), item)
+        # reprompt = _(data.WELCOME_REPROMPT)
+
+        speech = "Welcome to terraria tool"
 
         handler_input.response_builder.speak(speech).set_card(
             SimpleCard(data.SKILL_NAME, "Terraria Tool")
-        ).ask(reprompt)
+        ).ask(data.WELCOME_REPROMPT)
 
         return handler_input.response_builder.response
 
@@ -115,7 +117,7 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
         return handler_input.response_builder.response
 
-class RandomItemIntentHandler():
+class RandomItemIntentHandler(AbstractRequestHandler):
     """
     Handler for getting the recipe for a random item.
 
@@ -281,6 +283,7 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
 
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(RecipeIntentHandler())
+sb.add_request_handler(RandomItemIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(RepeatIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
