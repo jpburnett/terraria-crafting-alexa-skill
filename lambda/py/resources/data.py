@@ -4,7 +4,7 @@
 from gettext import gettext as _
 
 SKILL_NAME = _("Terraria Tool")
-WELCOME_MESSAGE = _("Welcome to {}. You can ask me something like, what's the recipe for a {}? ... Now, what can I help you craft?")
+WELCOME_MESSAGE = _("Welcome to {}. You can ask me something like, what's the recipe for a {}? Or you can ask me for a random item... Now, what can I help you craft?")
 WELCOME_REPROMPT = _("For instructions on what you can say, please say help.")
 DISPLAY_CARD_TITLE = _("{}  - Recipe for {}.")
 HELP_MESSAGE = _("You can ask, what's the recipe for a {}, or, you can say exit...So, what can I help you craft?")
@@ -78,5 +78,17 @@ RECIPE_EN_US = {
     "soul of fright": "soul of fright is dropped by defeating skeletron prime",
     "holy water": "holy water requires 5 pixie dust, 1 bottled water and 1 hallowed seeds",
     "unholy water": "unholy water requires 1 bottled water, 1 corrupt seeds and 1 ebonsand block",
-    "": ""
+    # Armor
+    ## Meteor Armor
+    "meteor helmet": "a meteor helmet is made with 25 meteorite bars",
+    "meteor suit": "a meteor suit is made with 35 meteorite bars",
+    "meteor leggings": "meteor leggings are made with 30 meteorite bars",
+    ## Molten Armor
+    "molten helmet": "a molten helmet is made with 30 hellstone bars",
+    "molten breastplate": "a molten breastplate is made with 40 hellstone bars",
+    "molten greaves": "molten greaves is made with 35 hellstone bars",
+    ## Jungle Armor
+    "jungle hat": "a jungle hat requires 8 jungle spores",
+    "jungle shirt": "a jungle shirt requires 16 jungle spores, and 10 stingers",
+    "jungle pants": "jungle pants are made with 8 jungle spores and 2 vines"
 }

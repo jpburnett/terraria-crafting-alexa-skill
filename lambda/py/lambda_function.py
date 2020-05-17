@@ -59,7 +59,10 @@ class LaunchRequestHandler(AbstractRequestHandler):
             _(data.SKILL_NAME), item)
         reprompt = _(data.WELCOME_REPROMPT)
 
-        handler_input.response_builder.speak(speech).ask(reprompt)
+        handler_input.response_builder.speak(speech).set_card(
+            SimpleCard(data.SKILL_NAME, "Terraria Tool")
+        ).ask(reprompt)
+
         return handler_input.response_builder.response
 
 
@@ -130,7 +133,16 @@ class RandomItemIntentHandler():
         logger.info("In RandomItemIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-        return handler_input.response_builder.response_builder
+        # Create Card
+        card_title = "Random Item"
+        card_text = "test"
+        speech_text = "Hello there"
+
+        handler_input.response_builder.speak(speech_text).set_card(
+            SimpleCard(card_title, card_text)
+        ) 
+
+        return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
