@@ -91,10 +91,10 @@ class RecipeIntentHandler(AbstractRequestHandler):
         card_title = _(data.DISPLAY_CARD_TITLE).format(
             _(data.SKILL_NAME), item_name)
 
-        my_recipes = data.ITEMS
+        list_of_items = data.ITEMS
 
-        if item_name in my_recipes:
-            recipe = my_recipes[item_name]
+        if item_name in list_of_items:
+            recipe = list_of_items[item_name]
             # session_attributes['speech'] = recipe
             handler_input.response_builder.speak(recipe).set_card(
                 SimpleCard(card_title, recipe))
@@ -131,13 +131,21 @@ class RandomItemIntentHandler(AbstractRequestHandler):
         logger.info("In RandomItemIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
+        list_of_items = data.ITEMS
+
+        #Get the random item
+        item = util.get_random_item()
+        
+        recipe = list_of_items[item]
+
         # Create Card
-        card_title = "Random Item"
-        card_text = "test"
-        speech_text = "Hello there"
+        card_title = _(data.DISPLAY_CARD_TITLE).format(
+            _("Random Item"), item)
+
+        speech_text = recipe
 
         handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard(card_title, card_text)
+            SimpleCard(card_title, recipe)
         ) 
 
         return handler_input.response_builder.response
