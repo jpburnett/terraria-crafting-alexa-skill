@@ -24,9 +24,7 @@ from ask_sdk_model import Response
 #--------------------------------------------------------------------------
 from resources import data, util
 
-
-sb = SkillBuilder()
-
+# Set Logging 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -41,7 +39,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
     Parameters:
     AbstractRequestHandler (obj): Amazon Request Handler object
 
-    Returns: amazon response object
+    Returns: Amazon response object
     """
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
@@ -50,20 +48,17 @@ class LaunchRequestHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         logger.info("In LaunchRequestHandler")
-        # _ = handler_input.attributes_manager.request_attributes["_"]
+        _ = handler_input.attributes_manager.request_attributes["_"]
 
-        # locale = handler_input.request_envelope.request.locale
-        # item = util.get_random_item(locale)
+        item = util.get_random_item()
+        speech = _(data.WELCOME_MESSAGE).format(
+            _(data.SKILL_NAME), item)
 
-        # speech = _(data.WELCOME_MESSAGE).format(
-        #     _(data.SKILL_NAME), item)
-        # reprompt = _(data.WELCOME_REPROMPT)
-
-        speech = "Welcome to terraria tool"
+        reprompt = _(data.WELCOME_REPROMPT)
 
         handler_input.response_builder.speak(speech).set_card(
             SimpleCard(data.SKILL_NAME, "Terraria Tool")
-        ).ask(data.WELCOME_REPROMPT)
+        ).ask(reprompt)
 
         return handler_input.response_builder.response
 
@@ -84,7 +79,7 @@ class RecipeIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         logger.info("In RecipeIntentHandler")
-        locale = handler_input.request_envelope.request.locale
+
         _ = handler_input.attributes_manager.request_attributes["_"]
 
         try:
@@ -95,7 +90,8 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
         card_title = _(data.DISPLAY_CARD_TITLE).format(
             _(data.SKILL_NAME), item_name)
-        my_recipes = util.load_locale_specific_recipe(locale)
+
+        my_recipes = data.ITEMS
 
         if item_name in my_recipes:
             recipe = my_recipes[item_name]
@@ -157,8 +153,7 @@ class HelpIntentHandler(AbstractRequestHandler):
         logger.info("In HelpIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-        locale = handler_input.request_envelope.request.locale
-        item = util.get_random_item(locale)
+        item = util.get_random_item()
 
         speech = _(data.HELP_MESSAGE).format(item)
 
@@ -214,8 +209,7 @@ class FallbackIntentHandler(AbstractRequestHandler):
         logger.info("In FallbackIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-        locale = handler_input.request_envelope.request.locale
-        item = util.get_random_item(locale)
+        item = util.get_random_item()
 
         help_message = _(data.HELP_MESSAGE).format(item)
         help_reprompt = _(data.HELP_REPROMPT).format(item)
@@ -280,6 +274,8 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
             'data', localedir='locales', languages=[locale], fallback=True)
         handler_input.attributes_manager.request_attributes["_"] = i18n.gettext
 
+
+sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(RecipeIntentHandler())

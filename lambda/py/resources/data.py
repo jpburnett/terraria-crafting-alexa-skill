@@ -4,20 +4,28 @@
 from gettext import gettext as _
 
 SKILL_NAME = _("Terraria Tool")
-WELCOME_MESSAGE = _("Welcome to {}. You can ask me something like, what's the recipe for a {}? Or you can ask me for a random item... Now, what can I help you craft?")
+WELCOME_MESSAGE = _("Welcome to {}. You can ask me something like, what's the recipe for a {}? \
+    Or you can ask me for a random item... Now, what can I help you craft?")
+
 WELCOME_REPROMPT = _("For instructions on what you can say, please say help.")
+
 DISPLAY_CARD_TITLE = _("{}  - Recipe for {}.")
-HELP_MESSAGE = _("You can ask, what's the recipe for a {}, or, you can say exit...So, what can I help you craft?")
-HELP_REPROMPT = _("You can say things like, what's the recipe for a {}, or you can say exit...So, what can I help you craft?")
+
+HELP_MESSAGE = _("You can ask, what's the recipe for a {}, or, you can say exit...\
+    So, what can I help you craft?")
+
+HELP_REPROMPT = _("You can say things like, what's the recipe for a {}, or you can say exit...\
+    So, what can I help you craft?")
+    
 FALLBACK_MESSAGE = _("The {} skill can't help you with that.")
 STOP_MESSAGE = _("Happy Crafting!")
-RECIPE_REPEAT_MESSAGE = _("Try saying repeat.")
-RECIPE_NOT_FOUND_MESSAGE = _("I'm sorry, I currently do not know ")
-RECIPE_NOT_FOUND_WITH_ITEM_NAME = _("the recipe for {}. ")
-RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME = _("that recipe. ")
-RECIPE_NOT_FOUND_REPROMPT = _("What else can I help with?")
+ITEM_REPEAT_MESSAGE = _("Try saying repeat.")
+ITEM_NOT_FOUND_MESSAGE = _("I'm sorry, I currently do not know ")
+ITEM_NOT_FOUND_WITH_ITEM_NAME = _("the recipe for {}. ")
+ITEM_NOT_FOUND_WITHOUT_ITEM_NAME = _("that recipe. ")
+ITEM_NOT_FOUND_REPROMPT = _("What else can I help with?")
 
-RECIPE_EN_US = {
+ITEMS = {
     # Furniture
     "wood door": "a wood door is made with 6 wood while standing by a crafting table",
     "wood chair": "a wood chair is made with 4 wood while standing by a crafting table",
