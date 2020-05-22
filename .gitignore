@@ -10,3 +10,5 @@ skill.json
 
 skill_env
 skill_env.zip
+
+**/__pycache__
