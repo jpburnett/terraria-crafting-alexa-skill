@@ -93,19 +93,23 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
         list_of_items = data.ITEMS
 
+        # I was dumb and didn't put all 3000 items as lowercase...so here we are
+        #TODO: Eventually fix the dictionary, but get this working first
+        list_of_items = {k.lower(): v for k, v in list_of_items.items()}
+
         if item_name in list_of_items:
             recipe = list_of_items[item_name]
             # session_attributes['speech'] = recipe
             handler_input.response_builder.speak(recipe).set_card(
-                SimpleCard(card_title, recipe))
+                SimpleCard(card_title, recipe)).set_should_end_session(True)
         else:
-            speech = _(data.RECIPE_NOT_FOUND_MESSAGE)
-            reprompt = _(data.RECIPE_NOT_FOUND_REPROMPT)
+            speech = _(data.ITEM_NOT_FOUND_MESSAGE)
+            reprompt = _(data.ITEM_NOT_FOUND_REPROMPT)
             if item_name:
-                speech += _(data.RECIPE_NOT_FOUND_WITH_ITEM_NAME).format(
+                speech += _(data.ITEM_NOT_FOUND_WITH_ITEM_NAME).format(
                     item_name)
             else:
-                speech += _(data.RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME)
+                speech += _(data.ITEM_NOT_FOUND_WITHOUT_ITEM_NAME)
             speech += reprompt
 
             handler_input.response_builder.speak(speech).ask(
@@ -146,7 +150,7 @@ class RandomItemIntentHandler(AbstractRequestHandler):
 
         handler_input.response_builder.speak(speech_text).set_card(
             SimpleCard(card_title, recipe)
-        ) 
+        ).set_should_end_session(True)
 
         return handler_input.response_builder.response
 
@@ -200,6 +204,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
         speech = _(data.STOP_MESSAGE).format(_(data.SKILL_NAME))
         handler_input.response_builder.speak(speech)
+
         return handler_input.response_builder.response
 
 
@@ -255,7 +260,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
         logger.info("Original request was {}".format(
             handler_input.request_envelope.request))
 
-        speech = _("Sorry, I can't understand the command. Please say again!!")
+        speech = _("Sorry, I can't understand the command. Please say again!")
         handler_input.response_builder.speak(speech).ask(speech)
 
         return handler_input.response_builder.response

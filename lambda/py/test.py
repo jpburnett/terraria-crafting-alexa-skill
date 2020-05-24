@@ -3,12 +3,16 @@
 #--------------------------------------------------------------------------
 from resources import data, util
 
-my_recipes = data.ITEMS
+list_of_items = data.ITEMS
 
 #Get the random item
-item_name = util.get_random_item()
+item_name = "Torch"
 
-recipe = my_recipes[item_name]
+item_name = item_name.lower()
+print("The item I am looking for is", item_name)
 
-print(item_name)
-print(recipe)
+list_of_items = {k.lower(): v for k, v in list_of_items.items()}
+
+if item_name in list_of_items:
+    recipe = list_of_items[item_name]
+    print(recipe)
