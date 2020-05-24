@@ -1,10 +1,15 @@
 """
 Skill to help with crafting options in Terraria
 """
-
+#--------------------------------------------------------------------------
+# Python Libraries
+#--------------------------------------------------------------------------
 import logging
 import gettext
 
+#--------------------------------------------------------------------------
+# AwS Libraries
+#--------------------------------------------------------------------------
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.dispatch_components import (
@@ -14,20 +19,28 @@ from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model import Response
 
+#--------------------------------------------------------------------------
+# Resource Libraries
+#--------------------------------------------------------------------------
 from resources import data, util
 
-
-sb = SkillBuilder()
-
+# Set Logging 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-# //////////////////////////////////////////////////////////////////////////////
-# // Handlers
-# //////////////////////////////////////////////////////////////////////////////
+#--------------------------------------------------------------------------
+# Handlers
+#--------------------------------------------------------------------------
 class LaunchRequestHandler(AbstractRequestHandler):
-    """Handler for skill launch."""
+    """
+    Handler for skill launch.
+
+    Parameters:
+    AbstractRequestHandler (obj): Amazon Request Handler object
+
+    Returns: Amazon response object
+    """
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_request_type("LaunchRequest")(handler_input)
@@ -37,19 +50,28 @@ class LaunchRequestHandler(AbstractRequestHandler):
         logger.info("In LaunchRequestHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-        locale = handler_input.request_envelope.request.locale
-        item = util.get_random_item(locale)
-
+        item = util.get_random_item()
         speech = _(data.WELCOME_MESSAGE).format(
             _(data.SKILL_NAME), item)
+
         reprompt = _(data.WELCOME_REPROMPT)
 
-        handler_input.response_builder.speak(speech).ask(reprompt)
+        handler_input.response_builder.speak(speech).set_card(
+            SimpleCard(data.SKILL_NAME, "Terraria Tool")
+        ).ask(reprompt)
+
         return handler_input.response_builder.response
 
 
 class RecipeIntentHandler(AbstractRequestHandler):
-    """Handler for Recipe Intent."""
+    """
+    Handler for getting the recipe for an item
+
+    Parameters:
+    AbstractRequestHandler (obj): Amazon Request Handler object
+
+    Returns: Amazon request with the item the user requested
+    """
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         return is_intent_name("RecipeIntent")(handler_input)
@@ -57,7 +79,7 @@ class RecipeIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
         logger.info("In RecipeIntentHandler")
-        locale = handler_input.request_envelope.request.locale
+
         _ = handler_input.attributes_manager.request_attributes["_"]
 
         try:
@@ -68,21 +90,26 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
         card_title = _(data.DISPLAY_CARD_TITLE).format(
             _(data.SKILL_NAME), item_name)
-        my_recipes = util.load_locale_specific_recipe(locale)
 
-        if item_name in my_recipes:
-            recipe = my_recipes[item_name]
+        list_of_items = data.ITEMS
+
+        # I was dumb and didn't put all 3000 items as lowercase...so here we are
+        #TODO: Eventually fix the dictionary, but get this working first
+        list_of_items = {k.lower(): v for k, v in list_of_items.items()}
+
+        if item_name in list_of_items:
+            recipe = list_of_items[item_name]
             # session_attributes['speech'] = recipe
             handler_input.response_builder.speak(recipe).set_card(
-                SimpleCard(card_title, recipe))
+                SimpleCard(card_title, recipe)).set_should_end_session(True)
         else:
-            speech = _(data.RECIPE_NOT_FOUND_MESSAGE)
-            reprompt = _(data.RECIPE_NOT_FOUND_REPROMPT)
+            speech = _(data.ITEM_NOT_FOUND_MESSAGE)
+            reprompt = _(data.ITEM_NOT_FOUND_REPROMPT)
             if item_name:
-                speech += _(data.RECIPE_NOT_FOUND_WITH_ITEM_NAME).format(
+                speech += _(data.ITEM_NOT_FOUND_WITH_ITEM_NAME).format(
                     item_name)
             else:
-                speech += _(data.RECIPE_NOT_FOUND_WITHOUT_ITEM_NAME)
+                speech += _(data.ITEM_NOT_FOUND_WITHOUT_ITEM_NAME)
             speech += reprompt
 
             handler_input.response_builder.speak(speech).ask(
@@ -90,6 +117,42 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
         return handler_input.response_builder.response
 
+class RandomItemIntentHandler(AbstractRequestHandler):
+    """
+    Handler for getting the recipe for a random item.
+
+    Parameters:
+    AbstractRequestHandler (obj): Amazon Request Handler object
+
+    Returns: amazon response object
+    """
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return is_intent_name("RandomItemIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+        logger.info("In RandomItemIntentHandler")
+        _ = handler_input.attributes_manager.request_attributes["_"]
+
+        list_of_items = data.ITEMS
+
+        #Get the random item
+        item = util.get_random_item()
+        
+        recipe = list_of_items[item]
+
+        # Create Card
+        card_title = _(data.DISPLAY_CARD_TITLE).format(
+            _("Random Item"), item)
+
+        speech_text = recipe
+
+        handler_input.response_builder.speak(speech_text).set_card(
+            SimpleCard(card_title, recipe)
+        ).set_should_end_session(True)
+
+        return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
@@ -102,8 +165,7 @@ class HelpIntentHandler(AbstractRequestHandler):
         logger.info("In HelpIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-        locale = handler_input.request_envelope.request.locale
-        item = util.get_random_item(locale)
+        item = util.get_random_item()
 
         speech = _(data.HELP_MESSAGE).format(item)
 
@@ -142,6 +204,7 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
         speech = _(data.STOP_MESSAGE).format(_(data.SKILL_NAME))
         handler_input.response_builder.speak(speech)
+
         return handler_input.response_builder.response
 
 
@@ -159,8 +222,7 @@ class FallbackIntentHandler(AbstractRequestHandler):
         logger.info("In FallbackIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-        locale = handler_input.request_envelope.request.locale
-        item = util.get_random_item(locale)
+        item = util.get_random_item()
 
         help_message = _(data.HELP_MESSAGE).format(item)
         help_reprompt = _(data.HELP_REPROMPT).format(item)
@@ -198,7 +260,7 @@ class CatchAllExceptionHandler(AbstractExceptionHandler):
         logger.info("Original request was {}".format(
             handler_input.request_envelope.request))
 
-        speech = _("Sorry, I can't understand the command. Please say again!!")
+        speech = _("Sorry, I can't understand the command. Please say again!")
         handler_input.response_builder.speak(speech).ask(speech)
 
         return handler_input.response_builder.response
@@ -226,8 +288,11 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
         handler_input.attributes_manager.request_attributes["_"] = i18n.gettext
 
 
+sb = SkillBuilder()
+
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(RecipeIntentHandler())
+sb.add_request_handler(RandomItemIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(RepeatIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())

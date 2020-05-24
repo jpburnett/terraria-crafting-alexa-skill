@@ -1,8 +1,14 @@
 #.gitignore for terraria tool
 
 .DS_Store
+
 /lambda/custom/node_modules
 test/
 .ask
 skill.json
 .ask/config
+
+skill_env
+skill_env.zip
+
+**/__pycache__
