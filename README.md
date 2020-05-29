@@ -21,6 +21,9 @@ Gets a random recipe from the dictionary of items
 - To use Say, "Alexa, open Terraria Tool" or
 - "Alexa ask Terraria tool for a random item"
 
+### [Link to the Skill on Amazon](https://www.amazon.com/Parker-Burnett-Terraria-Tool/dp/B075831DPC/ref=sr_1_1?dchild=1&keywords=Terraria+tool&qid=1590714662&s=digital-skills&sr=1-1)
+
+
 
 # Deploying Code to AWS 
 
