@@ -8,6 +8,14 @@ test/
 skill.json
 .ask/config
 
+# Models JSONS 
+models
+
+#Secret AWS Stuff
+skill-package
+infrastructure
+ask-resources.json
+
 skill_env
 skill_env.zip
 
