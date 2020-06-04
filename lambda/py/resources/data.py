@@ -17,7 +17,7 @@ HELP_MESSAGE = _("You can ask, what's the recipe for a {}, or, you can say exit.
 HELP_REPROMPT = _("You can say things like, what's the recipe for a {}, or you can say exit...\
     So, what can I help you craft?")
     
-FALLBACK_MESSAGE = _("The {} skill can't help you with that.")
+FALLBACK_MESSAGE = _("The {} skill can't help you with that, but")
 STOP_MESSAGE = _("Happy Crafting!")
 ITEM_REPEAT_MESSAGE = _("Try saying repeat.")
 ITEM_NOT_FOUND_MESSAGE = _("I'm sorry, I currently do not know ")

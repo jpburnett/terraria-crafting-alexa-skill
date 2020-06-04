@@ -88,8 +88,7 @@ class RecipeIntentHandler(AbstractRequestHandler):
             logger.info("Could not resolve item name")
             item_name = None
 
-        card_title = _(data.DISPLAY_CARD_TITLE).format(
-            _(data.SKILL_NAME), item_name)
+        card_title = _(data.DISPLAY_CARD_TITLE).format(_(data.SKILL_NAME), item_name)
 
         list_of_items = data.ITEMS
 
@@ -114,6 +113,9 @@ class RecipeIntentHandler(AbstractRequestHandler):
 
             handler_input.response_builder.speak(speech).ask(
                 reprompt)
+
+        #TODO: Is there a way to put in here "would you like to know another item" 
+        # instead of having to open the skill multiple times?
 
         return handler_input.response_builder.response
 
@@ -143,8 +145,7 @@ class RandomItemIntentHandler(AbstractRequestHandler):
         recipe = list_of_items[item]
 
         # Create Card
-        card_title = _(data.DISPLAY_CARD_TITLE).format(
-            _("Random Item"), item)
+        card_title = _(data.DISPLAY_CARD_TITLE).format(_("Random Item"), item)
 
         speech_text = recipe
 
@@ -210,9 +211,8 @@ class CancelOrStopIntentHandler(AbstractRequestHandler):
 
 class FallbackIntentHandler(AbstractRequestHandler):
     """Handler for Fallback Intent.
-    AMAZON.FallbackIntent is only available in en-US locale.
-    This handler will not be triggered except in that locale,
-    so it is safe to deploy on any locale.
+
+    Used for catching instances that aren't covered by the skill
     """
     def can_handle(self, handler_input):
         return is_intent_name("AMAZON.FallbackIntent")(handler_input)
@@ -222,10 +222,13 @@ class FallbackIntentHandler(AbstractRequestHandler):
         logger.info("In FallbackIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
+        # Nab a random item for an example
         item = util.get_random_item()
 
         help_message = _(data.HELP_MESSAGE).format(item)
         help_reprompt = _(data.HELP_REPROMPT).format(item)
+
+        # Format the speech output
         speech = _(data.FALLBACK_MESSAGE).format(
             _(data.SKILL_NAME)) + help_message
         reprompt = _(data.FALLBACK_MESSAGE).format(
