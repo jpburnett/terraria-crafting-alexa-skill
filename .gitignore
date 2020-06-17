@@ -3,9 +3,6 @@
 # if im on my mac
 .DS_Store
 
-# Models JSONS 
-models
-
 #Secret AWS Stuff
 skill-package
 infrastructure
