@@ -24,8 +24,8 @@ from ask_sdk_model import Response
 #--------------------------------------------------------------------------
 from skill.resources import data, util
 from skill.intents.built_in_intenets import HelpIntentHandler, CancelOrStopIntentHandler, RepeatIntentHandler, \
-    FallbackIntentHandler, SessionEndedRequestHandler, CatchAllExceptionHandler, \
-    CacheSpeechForRepeatInterceptor, LocalizationInterceptor
+    FallbackIntentHandler, SessionEndedRequestHandler, YesIntentHandler, NoIntentHandler, \
+    CatchAllExceptionHandler, CacheSpeechForRepeatInterceptor, LocalizationInterceptor
 from skill.intents.recipe_intent import RecipeIntentHandler
 from skill.intents.random_item_intent import RandomItemIntentHandler
 
@@ -77,6 +77,8 @@ sb.add_request_handler(RepeatIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(FallbackIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
+sb.add_request_handler(YesIntentHandler())
+sb.add_request_handler(NoIntentHandler())
 
 sb.add_exception_handler(CatchAllExceptionHandler())
 

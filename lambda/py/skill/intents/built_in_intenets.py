@@ -75,10 +75,10 @@ class RepeatIntentHandler(AbstractRequestHandler):
         logger.info("In RepeatIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
-        session_attributes = handler_input.attributes_manager.session_attributes
+        attr = handler_input.attributes_manager.session_attributes
         handler_input.response_builder.speak(
-            session_attributes['speech']).ask(
-            session_attributes['reprompt'])
+            attr['speech']).ask(
+            attr['reprompt'])
         return handler_input.response_builder.response
 
 class FallbackIntentHandler(AbstractRequestHandler):
@@ -121,6 +121,31 @@ class SessionEndedRequestHandler(AbstractRequestHandler):
             handler_input.request_envelope.request.reason))
         return handler_input.response_builder.response
 
+class YesIntentHandler(AbstractRequestHandler):
+    """Handler for the YesIntent."""
+    def can_handle(self, handler_input):
+        return is_intent_name("AMAZON.YesIntent")(handler_input)
+
+    def handle(self, handler_input):
+        logger.debug("In YesIntentHandler")
+        _ = handler_input.attributes_manager.request_attributes["_"]
+        session_attributes = handler_input.attributes_manager.session_attributes
+
+        return handler_input.response_builder.response
+
+class NoIntentHandler(AbstractRequestHandler):
+    """Handler for the NoIntent. Sometimes its okay to say no"""
+    def can_handle(self, handler_input):
+        return is_intent_name("AMAZON.NoIntent")(handler_input)
+
+    def handle(self, handler_input):
+        logger.debug("In NoIntentHandler")
+        _ = handler_input.attributes_manager.request_attributes["_"]
+        handler_input.response_builder.speak(_(data.STOP_MESSAGE)).set_should_end_session(True)
+
+        return handler_input.response_builder.response
+
+
 class CatchAllExceptionHandler(AbstractExceptionHandler):
     """Global exception handler."""
     def can_handle(self, handler_input, exception):
@@ -159,24 +184,3 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
             'data', localedir='locales', languages=[locale], fallback=True)
         handler_input.attributes_manager.request_attributes["_"] = i18n.gettext
 
-class YesIntentHandler(AbstractRequestHandler):
-    def can_handle(self, handler_input):
-        return is_intent_name("AMAZON.YesIntent")(handler_input)
-
-    def handle(self, handler_input):
-        logger.debug("In YesIntentHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
-        session_attributes = handler_input.attributes_manager.session_attributes
-
-        return handler_input.response_builder.response
-
-class NoIntentHandler(AbstractRequestHandler):
-    def can_handle(self, handler_input):
-        return is_intent_name("AMAZON.NoIntent")(handler_input)
-
-    def handle(self, handler_input):
-        logger.debug("In NoIntentHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
-        handler_input.response_builder.speak(_(data.STOP_MESSAGE)).set_should_end_session(True)
-
-        return handler_input.response_builder.response

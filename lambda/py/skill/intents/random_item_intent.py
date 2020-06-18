@@ -48,6 +48,15 @@ class RandomItemIntentHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         logger.info("In RandomItemIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
+        
+        # Get existing attributes from the incoming request
+        session_attr = handler_input.attributes_manager.session_attributes
+
+        prev_intent = session_attr.get("PREV_INTENT")
+
+        print("----------------START OF SESSION ATTRIBUTES-----------")
+        print(prev_intent)
+        print("-----------------END OF TEST------------------------")
 
         list_of_items = data.ITEMS
 
@@ -59,10 +68,10 @@ class RandomItemIntentHandler(AbstractRequestHandler):
         # Create Card
         card_title = _(data.DISPLAY_CARD_TITLE).format(_("Random Item"), item)
 
-        speech_text = recipe
+        speech_text = recipe + " " + data.REPEAT_RANDOM
 
         handler_input.response_builder.speak(speech_text).set_card(
             SimpleCard(card_title, recipe)
-        ).set_should_end_session(True)
+        )
 
         return handler_input.response_builder.response
