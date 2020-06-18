@@ -22,12 +22,12 @@ from ask_sdk_model import Response
 #--------------------------------------------------------------------------
 # Resource Libraries
 #--------------------------------------------------------------------------
-from resources import data, util
-from skill import HelpIntentHandler, CancelOrStopIntentHandler, RepeatIntentHandler, \
+from skill.resources import data, util
+from skill.intents.built_in_intenets import HelpIntentHandler, CancelOrStopIntentHandler, RepeatIntentHandler, \
     FallbackIntentHandler, SessionEndedRequestHandler, CatchAllExceptionHandler, \
     CacheSpeechForRepeatInterceptor, LocalizationInterceptor
-from skill import RandomItemIntentHandler
-from skill import RecipeIntentHandler
+from skill.intents.recipe_intent import RecipeIntentHandler
+from skill.intents.random_item_intent import RandomItemIntentHandler
 
 # Set Logging 
 logger = logging.getLogger(__name__)

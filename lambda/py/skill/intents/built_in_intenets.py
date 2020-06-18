@@ -24,7 +24,11 @@ import gettext
 #--------------------------------------------------------------------------
 # Resource Libraries
 #--------------------------------------------------------------------------
-from resources import data, util
+from skill.resources import data, util
+
+# Set Logging 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class HelpIntentHandler(AbstractRequestHandler):
     """Handler for Help Intent."""
@@ -154,3 +158,25 @@ class LocalizationInterceptor(AbstractRequestInterceptor):
         i18n = gettext.translation(
             'data', localedir='locales', languages=[locale], fallback=True)
         handler_input.attributes_manager.request_attributes["_"] = i18n.gettext
+
+class YesIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        return is_intent_name("AMAZON.YesIntent")(handler_input)
+
+    def handle(self, handler_input):
+        logger.debug("In YesIntentHandler")
+        _ = handler_input.attributes_manager.request_attributes["_"]
+        session_attributes = handler_input.attributes_manager.session_attributes
+
+        return handler_input.response_builder.response
+
+class NoIntentHandler(AbstractRequestHandler):
+    def can_handle(self, handler_input):
+        return is_intent_name("AMAZON.NoIntent")(handler_input)
+
+    def handle(self, handler_input):
+        logger.debug("In NoIntentHandler")
+        _ = handler_input.attributes_manager.request_attributes["_"]
+        handler_input.response_builder.speak(_(data.STOP_MESSAGE)).set_should_end_session(True)
+
+        return handler_input.response_builder.response

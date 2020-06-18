@@ -24,7 +24,12 @@ import gettext
 #--------------------------------------------------------------------------
 # Resource Libraries
 #--------------------------------------------------------------------------
-from resources import data, util
+from skill.resources import data, util
+
+# Set Logging 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 class RandomItemIntentHandler(AbstractRequestHandler):
     """
