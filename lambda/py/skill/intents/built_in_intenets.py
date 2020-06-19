@@ -129,9 +129,30 @@ class YesIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         logger.debug("In YesIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
-        session_attributes = handler_input.attributes_manager.session_attributes
+        session_attr = handler_input.attributes_manager.session_attributes
 
-        return handler_input.response_builder.response
+        #Get what the previous intent was
+        prev_intent = session_attr.get("PREV_INTENT")
+
+        if prev_intent == "LaunchIntent":
+            speech = data.HELP_MESSAGE
+            reprompt = data.FALLBACK_MESSAGE
+
+            handler_input.response_builder.speak(speech) \
+            .set_should_end_session(False).ask(reprompt)
+            return handler_input.response_builder.response
+
+        if (prev_intent == "RecipeIntent"
+            or prev_intent == "RandomItemIntent"
+            or prev_intent == "AMAZON.YesIntent"
+            or prev_intent == "AMAZON.NoIntent"):
+            speech = data.HELP_MESSAGE
+            reprompt = data.FALLBACK_MESSAGE
+
+            handler_input.response_builder.speak(speech) \
+            .set_should_end_session(False).ask(reprompt)
+            return handler_input.response_builder.response
+
 
 class NoIntentHandler(AbstractRequestHandler):
     """Handler for the NoIntent. Sometimes its okay to say no"""

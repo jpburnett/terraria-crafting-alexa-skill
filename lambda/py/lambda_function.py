@@ -54,6 +54,10 @@ class LaunchRequestHandler(AbstractRequestHandler):
         logger.info("In LaunchRequestHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
+        # Get Session attributes
+        session_attr = handler_input.attributes_manager.session_attributes
+        session_attr["PREV_INTENT"] = "LaunchRequest"
+
         item = util.get_random_item()
         speech = _(data.WELCOME_MESSAGE).format(
             _(data.SKILL_NAME), item)

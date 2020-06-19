@@ -61,7 +61,9 @@ class RecipeIntentHandler(AbstractRequestHandler):
         if item_name in list_of_items:
             recipe = list_of_items[item_name]
             # session_attributes['speech'] = recipe
-            handler_input.response_builder.speak(recipe).set_card(
+            speech_text = item_name + ", " + recipe + ", " + data.REPEAT_RECIPE
+
+            handler_input.response_builder.speak(speech_text).set_card(
                 SimpleCard(card_title, recipe)).set_should_end_session(True)
         else:
             speech = _(data.ITEM_NOT_FOUND_MESSAGE)
