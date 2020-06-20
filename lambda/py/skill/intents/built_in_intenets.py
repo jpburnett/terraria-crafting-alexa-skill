@@ -162,7 +162,10 @@ class NoIntentHandler(AbstractRequestHandler):
     def handle(self, handler_input):
         logger.debug("In NoIntentHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
-        handler_input.response_builder.speak(_(data.STOP_MESSAGE)).set_should_end_session(True)
+        
+        speech = data.STOP_MESSAGE
+        handler_input.response_builder.speak(_(speech))
+            .set_should_end_session(True)
 
         return handler_input.response_builder.response
 
