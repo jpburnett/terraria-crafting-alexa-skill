@@ -1,22 +1,19 @@
 #.gitignore for terraria tool
 
+# if im on my mac
 .DS_Store
-
-/lambda/custom/node_modules
-test/
-.ask
-skill.json
-.ask/config
-
-# Models JSONS 
-models
 
 #Secret AWS Stuff
 skill-package
 infrastructure
 ask-resources.json
+skill.json
+.ask
 
+# all the node modules
 skill_env
 skill_env.zip
 
+# random things that pop up when I test
+test
 **/__pycache__

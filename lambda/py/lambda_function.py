@@ -1,5 +1,5 @@
 """
-Skill to help with crafting options in Terraria
+lambda_function deals with the launch handler and the skill building.
 """
 #--------------------------------------------------------------------------
 # Python Libraries
@@ -22,12 +22,16 @@ from ask_sdk_model import Response
 #--------------------------------------------------------------------------
 # Resource Libraries
 #--------------------------------------------------------------------------
-from resources import data, util
+from skill.resources import data, util
+from skill.intents.built_in_intenets import HelpIntentHandler, CancelOrStopIntentHandler, RepeatIntentHandler, \
+    FallbackIntentHandler, SessionEndedRequestHandler, YesIntentHandler, NoIntentHandler, \
+    CatchAllExceptionHandler, CacheSpeechForRepeatInterceptor, LocalizationInterceptor
+from skill.intents.recipe_intent import RecipeIntentHandler
+from skill.intents.random_item_intent import RandomItemIntentHandler
 
 # Set Logging 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
 
 #--------------------------------------------------------------------------
 # Handlers
@@ -50,6 +54,10 @@ class LaunchRequestHandler(AbstractRequestHandler):
         logger.info("In LaunchRequestHandler")
         _ = handler_input.attributes_manager.request_attributes["_"]
 
+        # Get Session attributes
+        session_attr = handler_input.attributes_manager.session_attributes
+        session_attr["PREV_INTENT"] = "LaunchRequest"
+
         item = util.get_random_item()
         speech = _(data.WELCOME_MESSAGE).format(
             _(data.SKILL_NAME), item)
@@ -63,231 +71,6 @@ class LaunchRequestHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 
-class RecipeIntentHandler(AbstractRequestHandler):
-    """
-    Handler for getting the recipe for an item
-
-    Parameters:
-    AbstractRequestHandler (obj): Amazon Request Handler object
-
-    Returns: Amazon request with the item the user requested
-    """
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("RecipeIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In RecipeIntentHandler")
-
-        _ = handler_input.attributes_manager.request_attributes["_"]
-
-        try:
-            item_name = handler_input.request_envelope.request.intent.slots["Item"].value.lower()
-        except AttributeError:
-            logger.info("Could not resolve item name")
-            item_name = None
-
-        card_title = _(data.DISPLAY_CARD_TITLE).format(
-            _(data.SKILL_NAME), item_name)
-
-        list_of_items = data.ITEMS
-
-        # I was dumb and didn't put all 3000 items as lowercase...so here we are
-        #TODO: Eventually fix the dictionary, but get this working first
-        list_of_items = {k.lower(): v for k, v in list_of_items.items()}
-
-        if item_name in list_of_items:
-            recipe = list_of_items[item_name]
-            # session_attributes['speech'] = recipe
-            handler_input.response_builder.speak(recipe).set_card(
-                SimpleCard(card_title, recipe)).set_should_end_session(True)
-        else:
-            speech = _(data.ITEM_NOT_FOUND_MESSAGE)
-            reprompt = _(data.ITEM_NOT_FOUND_REPROMPT)
-            if item_name:
-                speech += _(data.ITEM_NOT_FOUND_WITH_ITEM_NAME).format(
-                    item_name)
-            else:
-                speech += _(data.ITEM_NOT_FOUND_WITHOUT_ITEM_NAME)
-            speech += reprompt
-
-            handler_input.response_builder.speak(speech).ask(
-                reprompt)
-
-        return handler_input.response_builder.response
-
-class RandomItemIntentHandler(AbstractRequestHandler):
-    """
-    Handler for getting the recipe for a random item.
-
-    Parameters:
-    AbstractRequestHandler (obj): Amazon Request Handler object
-
-    Returns: amazon response object
-    """
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("RandomItemIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In RandomItemIntentHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
-
-        list_of_items = data.ITEMS
-
-        #Get the random item
-        item = util.get_random_item()
-        
-        recipe = list_of_items[item]
-
-        # Create Card
-        card_title = _(data.DISPLAY_CARD_TITLE).format(
-            _("Random Item"), item)
-
-        speech_text = recipe
-
-        handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard(card_title, recipe)
-        ).set_should_end_session(True)
-
-        return handler_input.response_builder.response
-
-class HelpIntentHandler(AbstractRequestHandler):
-    """Handler for Help Intent."""
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("AMAZON.HelpIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In HelpIntentHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
-
-        item = util.get_random_item()
-
-        speech = _(data.HELP_MESSAGE).format(item)
-
-        handler_input.response_builder.speak(speech).ask(speech)
-        return handler_input.response_builder.response
-
-
-class RepeatIntentHandler(AbstractRequestHandler):
-    """Handler for Repeat Intent."""
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        return is_intent_name("AMAZON.RepeatIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In RepeatIntentHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
-
-        session_attributes = handler_input.attributes_manager.session_attributes
-        handler_input.response_builder.speak(
-            session_attributes['speech']).ask(
-            session_attributes['reprompt'])
-        return handler_input.response_builder.response
-
-
-class CancelOrStopIntentHandler(AbstractRequestHandler):
-    """Handler for Cancel and Stop Intents."""
-    def can_handle(self, handler_input):
-        return (is_intent_name("AMAZON.CancelIntent")(handler_input) or
-                is_intent_name("AMAZON.StopIntent")(handler_input))
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In CancelOrStopIntentHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
-
-        speech = _(data.STOP_MESSAGE).format(_(data.SKILL_NAME))
-        handler_input.response_builder.speak(speech)
-
-        return handler_input.response_builder.response
-
-
-class FallbackIntentHandler(AbstractRequestHandler):
-    """Handler for Fallback Intent.
-    AMAZON.FallbackIntent is only available in en-US locale.
-    This handler will not be triggered except in that locale,
-    so it is safe to deploy on any locale.
-    """
-    def can_handle(self, handler_input):
-        return is_intent_name("AMAZON.FallbackIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In FallbackIntentHandler")
-        _ = handler_input.attributes_manager.request_attributes["_"]
-
-        item = util.get_random_item()
-
-        help_message = _(data.HELP_MESSAGE).format(item)
-        help_reprompt = _(data.HELP_REPROMPT).format(item)
-        speech = _(data.FALLBACK_MESSAGE).format(
-            _(data.SKILL_NAME)) + help_message
-        reprompt = _(data.FALLBACK_MESSAGE).format(
-            _(data.SKILL_NAME)) + help_reprompt
-
-        handler_input.response_builder.speak(speech).ask(reprompt)
-        return handler_input.response_builder.response
-
-
-class SessionEndedRequestHandler(AbstractRequestHandler):
-    """Handler for SessionEndedRequest."""
-    def can_handle(self, handler_input):
-        return is_request_type("SessionEndedRequest")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        logger.info("In SessionEndedRequestHandler")
-        logger.info("Session ended with reason: {}".format(
-            handler_input.request_envelope.request.reason))
-        return handler_input.response_builder.response
-
-
-class CatchAllExceptionHandler(AbstractExceptionHandler):
-    """Global exception handler."""
-    def can_handle(self, handler_input, exception):
-        return True
-
-    def handle(self, handler_input, exception):
-        # type: (HandlerInput, Exception) -> Response
-        _ = handler_input.attributes_manager.request_attributes["_"]
-        logger.error(exception, exc_info=True)
-        logger.info("Original request was {}".format(
-            handler_input.request_envelope.request))
-
-        speech = _("Sorry, I can't understand the command. Please say again!")
-        handler_input.response_builder.speak(speech).ask(speech)
-
-        return handler_input.response_builder.response
-
-
-class CacheSpeechForRepeatInterceptor(AbstractResponseInterceptor):
-    """Cache the output speech and reprompt to session attributes,
-    for repeat intent.
-    """
-    def process(self, handler_input, response):
-        # type: (HandlerInput, Response) -> None
-        session_attr = handler_input.attributes_manager.session_attributes
-        session_attr["speech"] = response.output_speech
-        session_attr["reprompt"] = response.reprompt
-
-
-class LocalizationInterceptor(AbstractRequestInterceptor):
-    """Add function to request attributes, that can load locale specific data."""
-    def process(self, handler_input):
-        # type: (HandlerInput) -> None
-        locale = handler_input.request_envelope.request.locale
-        logger.info("Locale is {}".format(locale))
-        i18n = gettext.translation(
-            'data', localedir='locales', languages=[locale], fallback=True)
-        handler_input.attributes_manager.request_attributes["_"] = i18n.gettext
-
-
 sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
@@ -298,6 +81,8 @@ sb.add_request_handler(RepeatIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(FallbackIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
+sb.add_request_handler(YesIntentHandler())
+sb.add_request_handler(NoIntentHandler())
 
 sb.add_exception_handler(CatchAllExceptionHandler())
 
