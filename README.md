@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/jpburnett/byu-facts-alexa-skill/master/LICENSE)
-[![Python 3.8.2](https://img.shields.io/badge/python-3.8.2-blue.svg)](https://www.python.org/downloads/release/python-382/)
+[![Python 3.8.5](https://img.shields.io/badge/python-3.8.5-blue.svg)](https://www.python.org/downloads/release/python-382/)
 
 # terraria-tool-alexa-skill
 The Terraria tool Alexa skill is aimed to help find recipes for crafting things easier when playing terraria. There are a variety of different item combinations used to make cooler items. 
